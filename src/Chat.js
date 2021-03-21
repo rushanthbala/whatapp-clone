@@ -9,7 +9,6 @@ import MicIcon from "@material-ui/icons/Mic";
 import { useParams } from "react-router-dom";
 import db from "./firebase";
 import firebase from "firebase";
-import userEvent from "@testing-library/user-event";
 import { useStateValue } from "./stateProvider";
 
 function Chat(props) {
@@ -17,7 +16,7 @@ function Chat(props) {
   const [message, setMessage] = useState([]);
   const [roomName, setRoomName] = useState("");
   const { roomId } = useParams();
-  const [ {user} , dispatch] = useStateValue()
+  const [{ user }, dispatch] = useStateValue();
 
   useEffect(() => {
     if (roomId) {
@@ -40,19 +39,13 @@ function Chat(props) {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-  console.log(message);
-
-    console.log(user);
-    db.collection('rooms').doc(roomId)
-    .collection('messages').add({
-      message:input,
-      name:user.displayName,
-      timestamp:firebase.firestore.FieldValue.serverTimestamp(),
+    db.collection("rooms").doc(roomId).collection("messages").add({
+      message: input,
+      name: user.displayName,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
-    setInput('') 
-    
+    setInput("");
   };
-
 
   return (
     <div className="chat">
@@ -63,7 +56,12 @@ function Chat(props) {
         />
         <div className="chat__info">
           <h2>{roomName}</h2>
-          <p>some date or {new Date (message[message.length -1 ]?.timestamp?.toDate() ).toUTCString() }</p>
+          <p>
+            some date or{" "}
+            {new Date(
+              message[message.length - 1]?.timestamp?.toDate()
+            ).toUTCString()}
+          </p>
         </div>
         <div className="chat__headerRight">
           <IconButton>
@@ -78,14 +76,20 @@ function Chat(props) {
         </div>
       </div>
       <div className="chat__body">
-        { message.map ((message)=>(
-           <p className={`chat__message ${message.name == user.displayName && 'chat__reaciver'} `}>
-           <span className="chat__name">{message.name} </span>
-           {message.message}
-           <span className="chat__timesamp ">  { new Date(message.timestamp ?. toDate()).toUTCString() } </span>
-         </p>
-          )) }
-       
+        {message.map((message) => (
+          <p
+            className={`chat__message ${
+              message.name == user.displayName && "chat__reaciver"
+            } `}
+          >
+            <span className="chat__name">{message.name}</span>
+            {message.message}
+            <span className="chat__timesamp">
+              {" "}
+              {new Date(message.timestamp?.toDate()).toUTCString()}{" "}
+            </span>
+          </p>
+        ))}
         );
       </div>
       <div className="chat__footer">

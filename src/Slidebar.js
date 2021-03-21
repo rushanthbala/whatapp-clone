@@ -9,34 +9,20 @@ import ContacksChat from "./ContacksChat";
 import db from "./firebase";
 import { useStateValue } from "./stateProvider";
 
-function Slidebar(props) {
-  const { id } = props;
+function Slidebar() {
   const [rooms, setRooms] = useState([]);
-  
-  const [message, setMessage] = useState([]);
-
-  const [ {user} , dispatch] = useStateValue()
-  console.log(user.photoURL);
+  const [{ user }] = useStateValue();
   const newGroup = () => {
     const roomName = prompt("write a name");
 
     if (roomName) {
-      db.collection('rooms').add({
-        name:roomName,
-      })
+      db.collection("rooms").add({
+        name: roomName,
+      });
     }
   };
 
   useEffect(() => {
-    if (id){
-      db.collection("rooms")
-      .doc(id)
-      .collection("messages")
-      .orderBy("timestamp", "sc")
-      .onSnapshot((snapshot) =>
-        setMessage(snapshot.docs.map((doc) => doc.data()))
-      );
-    }
     db.collection("rooms").onSnapshot((snapshot) => {
       setRooms(
         snapshot.docs.map((doc) => ({
@@ -47,7 +33,6 @@ function Slidebar(props) {
       );
     });
   }, []);
-  // console.log(rooms);
 
   return (
     <div className="sidebar">
