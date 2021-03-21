@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar } from "@material-ui/core";
 import "./ContacksChat.css";
 import { Link } from "react-router-dom";
+import db from "./firebase";
 function ContacksChat(props) {
-  const { name, message, id } = props;
+  const { name, id } = props;
+  const [message, setMessage] = useState([]);
 
+  useEffect(() => {
+    if (id){
+      db.collection("rooms")
+      .doc(id)
+      .collection("messages")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) =>
+        setMessage(snapshot.docs.map((doc) => doc.data()))
+      );
+    }
+  }, []);
   return (
     <Link to={`/rooms/${id}`}>
       <div className="ContacksChat">
@@ -14,7 +27,7 @@ function ContacksChat(props) {
         />
         <div className="ContacksChat__info">
           <h2>{name}</h2>
-          <p>{message}</p>
+          <p>{message[0]?.message}</p>
         </div>
       </div>
     </Link>

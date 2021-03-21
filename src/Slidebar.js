@@ -9,8 +9,12 @@ import ContacksChat from "./ContacksChat";
 import db from "./firebase";
 import { useStateValue } from "./stateProvider";
 
-function Slidebar() {
+function Slidebar(props) {
+  const { id } = props;
   const [rooms, setRooms] = useState([]);
+  
+  const [message, setMessage] = useState([]);
+
   const [ {user} , dispatch] = useStateValue()
   console.log(user.photoURL);
   const newGroup = () => {
@@ -24,6 +28,15 @@ function Slidebar() {
   };
 
   useEffect(() => {
+    if (id){
+      db.collection("rooms")
+      .doc(id)
+      .collection("messages")
+      .orderBy("timestamp", "sc")
+      .onSnapshot((snapshot) =>
+        setMessage(snapshot.docs.map((doc) => doc.data()))
+      );
+    }
     db.collection("rooms").onSnapshot((snapshot) => {
       setRooms(
         snapshot.docs.map((doc) => ({
@@ -72,7 +85,7 @@ function Slidebar() {
             <ContacksChat
               key={i}
               name={room.data.name}
-              message={room.data.name}
+              // message={room.data.name}
               id={room.id}
             />
           );
