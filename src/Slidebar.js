@@ -7,9 +7,12 @@ import { Avatar, IconButton } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import ContacksChat from "./ContacksChat";
 import db from "./firebase";
+import { useStateValue } from "./stateProvider";
 
 function Slidebar() {
   const [rooms, setRooms] = useState([]);
+  const [ {user} , dispatch] = useStateValue()
+  console.log(user.photoURL);
   const newGroup = () => {
     const roomName = prompt("write a name");
 
@@ -38,7 +41,8 @@ function Slidebar() {
       <div className="sidebar__header">
         <Avatar
           alt="Remy Sharp"
-          src="https://www.classicroses.co.uk/media/catalog/product/cache/6e9e0330b981bee0eba0610998958c79/h/a/handel_bm_2016_18_1000px.jpg"
+          src={user?.photoURL}
+          // src="https://www.classicroses.co.uk/media/catalog/product/cache/6e9e0330b981bee0eba0610998958c79/h/a/handel_bm_2016_18_1000px.jpg"
         />
         <div className="sidebar__headerRight">
           <IconButton>

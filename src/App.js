@@ -4,13 +4,15 @@ import Slidebar from "./Slidebar";
 import "./App.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Login from "./login";
-function App() {
-  const [user, setUser] = useState([""]);
-  // const { roomId } = useParams();
+import { useStateValue } from "./stateProvider";
 
+function App() {
+  const [ {user} , dispatch] = useStateValue()
+  // const { roomId } = useParams();
+console.log(user)
   return (
     <div className="app">
-      {user ? (
+      {!user ? (
         <Login/>
       ) : (
         <div className="app__body">
